@@ -54,6 +54,82 @@ io.on('connection', (socket) => {
 
 // routes 
 
+//save detected ativity
+app.post('/api/activity/', (req, res) => {
+
+        // console.log(req.body)
+
+        let camera_id = req.body.camera_id
+        let activity_name = req.body.activity_name
+        let screenshot_url = req.body.screenshot_url
+        let start_time = req.body.start_time
+        let end_time = req.body.end_time
+        
+        const newActivity = new Activity({
+            activity_name : activity_name,
+            screenshot_url : screenshot_url,
+            start_time : start_time,
+            end_time : end_time
+        })
+
+        // save new activity
+        console.log(newActivity)
+        newActivity.save().then((res) => {
+            console.log('saved activity')
+        }).catch((err) => {
+            console.log(err)
+        })
+
+        // add it to the camera from which it was detected
+        Camera.update(
+            {camera_id : camera_id},
+            {$push : {activities_detected : newActivity}}
+        ).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err)
+        })
+
+        // get camera details
+        let landmark = ''
+        let latitude = 0.0
+        let longitude = 0.0
+        Camera.findOne({camera_id: camera_id}).then((res) => {
+            landmark = res.landmark
+            latitude = res.latitude
+            longitude = res.longitude
+        })
+
+        req.app.io.emit('newactivity', {
+                camera_id,
+                latitude,
+                longitude,
+                landmark,
+                activity_name,
+                screenshot_url,
+                start_time,
+                end_time
+        });
+
+        res.status(200).send(); 
+    
+});
+
+//list all activites 
+
+app.get('/api/activity/', (req, res) =>{
+
+    Activity.find(req.query).then((result) => {
+        if(result.length === 0){
+            res.json({message : 'query does not match any Event'})
+        }
+        else {
+            res.status(200).json(result)
+        }
+        }).catch((err) => {console.log(err)})
+
+})
+
 // create camera
 app.post('/api/camera/', (req, res) => {
     const newCamera = new Camera({
@@ -83,6 +159,8 @@ app.get('/api/camera/', (req, res) => {
         console.log(err)
     })
 })
+
+// add activity
 
 
 server.listen(port, () => {
