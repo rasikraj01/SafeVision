@@ -4,7 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const ejs = require('ejs'),
+const ejs = require('ejs');
 
 
 const publicPath = path.join(__dirname, '../public');
@@ -73,7 +73,7 @@ app.post('/api/activity/', (req, res) => {
             end_time : end_time
         })
 
-        // save new activity
+        // save new activity PS THIS IS REDUNDANT
         console.log(newActivity)
         newActivity.save().then((res) => {
             console.log('saved activity')
