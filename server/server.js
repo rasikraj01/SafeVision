@@ -4,6 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const ejs = require('ejs'),
 
 
 const publicPath = path.join(__dirname, '../public');
@@ -160,8 +161,10 @@ app.get('/api/camera/', (req, res) => {
     })
 })
 
-// add activity
-
+//Frontend routes go here
+app.get('/', (req, res) => {
+    res.render('index')
+})
 
 server.listen(port, () => {
 	console.log(`Server is up on port ${port}`);
