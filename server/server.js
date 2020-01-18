@@ -20,6 +20,10 @@ mongoose.connect(
 mongoose.Promise = global.Promise;
 
 
+const Camera = require('./modeles/camera');
+const Activity = require('./models/activity');
+
+
 const port = process.env.PORT || 3000;
 var app = express();
 var server = http.createServer(app);
