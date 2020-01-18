@@ -17,7 +17,7 @@ const cameraSchema = mongoose.Schema({
         type:Number,
         required: true
     },
-    activities_detected : [{ type: Schema.Types.ObjectId, ref: 'activitySchema' }]
+    activities_detected : [{ type: mongoose.Schema.Types.ObjectId, ref: 'activitySchema' }]
 });
 
 const Camera = mongoose.model('camera', cameraSchema);

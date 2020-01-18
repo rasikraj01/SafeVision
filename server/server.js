@@ -20,7 +20,7 @@ mongoose.connect(
 mongoose.Promise = global.Promise;
 
 
-const Camera = require('./modeles/camera');
+const Camera = require('./models/camera');
 const Activity = require('./models/activity');
 
 
@@ -52,6 +52,37 @@ io.on('connection', (socket) => {
 	});
 });
 
+// routes 
+
+// create camera
+app.post('/api/camera/', (req, res) => {
+    const newCamera = new Camera({
+        camera_id : req.body.camera_id,
+        landmark : req.body.landmark,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude
+    })
+
+    newCamera.save().then((result) => {
+        res.status(200).json(result)
+    }).catch((err) => {
+        console.log(err)
+    })
+})
+
+// get cameras
+app.get('/api/camera/', (req, res) => {
+    Camera.find(req.query).then((result) => {
+        if(result.length === 0){
+            res.json({message : 'query does not match any Event'})
+         }
+         else {
+            res.status(200).json(result)
+         }
+    }).catch((err) => {
+        console.log(err)
+    })
+})
 
 
 server.listen(port, () => {
