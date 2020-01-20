@@ -214,6 +214,7 @@ app.get('/history/', (req, res) => {
                 activity.end_time = moment(activity.end_time).format('MMMM Do YYYY, h:mm:ss a')
             })
             // console.log(result_final)
+            result_final = result_final.reverse();
             res.render('history', {"res" : result_final})
         }
      }).catch((err) => {console.log(err)})

@@ -68,6 +68,9 @@ body{
     padding-top: 20px;
     color: #ED0F0F;
 }
+#alert-container h2{
+    color: white;
+}
 /*data viz*/
 #graph_1, #graph_2{
     height: 45%;
@@ -99,7 +102,7 @@ body{
  }
  .new img{
     width: 80%;
-    padding-top : 30px;
+    margin-top : 30px;
     border-radius: 20px;
 }
 .new h2{
