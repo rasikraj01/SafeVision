@@ -5,25 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	  
-    <title>SafeVision</title>
+    <title>SafeVision | History </title>
 	  
-    <link rel="shortcut icon" href="./images/favicon.ico">
+    <link rel="shortcut icon" href="/images/favicon.ico">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/history.css">
 </head>
 <body>
     <header>
         <nav>
           <div id="navbar">
             <div id="logo" class="reverse">
-              <div class="mobile-btn" style="font-size:30px;cursor:pointer; margin-left:12%;"><img src="./images/safeviz.png"></div>
+              <div class="mobile-btn" style="font-size:30px;cursor:pointer; margin-left:12%;"><img src="/images/safeviz.png"></div>
             </div>
             <div id="links"style="margin-right:12%;">
-              <a href="/"><button class="btn btn-danger" style="background-color: #ED0F0F;width: 100%; color: #fcfcfc;"><i class="fa fa-home"></i>&nbsp; HOME</button></a>
+              <a href="/"><button class="btn" style=" background-color: #fcfcfc;width: 100%;color:#B1B1B1;"><i class="fa fa-home"></i>&nbsp; HOME</button></a>
               <a href=""></a>
               <a><button class="btn" id="his"style=" background-color: #fcfcfc;width: 100%;color:#B1B1B1"><i class=" fa fa-bar-chart"></i>&nbsp; Detailed Stats</button></a>
-              <a href="/history/"><button class="btn" id="his" style="background-color: #fcfcfc;width: 100%;color:#B1B1B1;"><i class="fa fa-history"style="font-weight" aria-hidden="true"></i>&nbsp; History</button></a>
+              <a href="/history/"><button class="btn btn-danger" id="his" style="background-color: #ED0F0F;width: 100%; color: #fcfcfc;"><i class="fa fa-history"style="font-weight" aria-hidden="true"></i>&nbsp; History</button></a>
               <a href=""><button class="btn" style=" background-color: #fcfcfc;width: 100%;"><i class="fa fa-user" style="color:#B1B1B1;font-size:120%;"></i></a></div>
             </div>
           </div>
@@ -31,29 +31,21 @@
     </header>
 
 
-    <div class="container-two" >
-      <div id="viz-container">
-        <div id="graph_1"></div>
-        <div id="graph_2"></div>
-    </div>
-    <div class="alert-container">
-      <h2>RECENT ALERTS <i class="fa fa-bell-o" aria-hidden="true"></i></h2>
+    <div class="container-two">
+      <h2>RECORDED ALERTS <i class="fa fa-file-text-o" aria-hidden="true"></i></h2>
       <div id="alert-container">
-        <!--   {{#res}}
-        <div id="old">
+           {{#res}}
+        <div id="old-alert">
           <img src={{screenshot_url}} />
-          <h2>{{activity_name}}</h2>
-          <h2>Camera : {{camera_id}}</h2> 
-          <h2>Location : {{latitude}} , {{longitude}}</h2>
-          <h2>Landmark : {{landmark}} </h2>
-          <h2>Start Time : {{start_time}} </h2>				
-          <h2>End Time : {{end_time}} </h2>
+          <h3>Suspicion of {{activity_name}}</h3>
+          <h3><span>Camera</span> : {{camera_id}}</h3> 
+          <h3><span>Location </span>: {{latitude}} , {{longitude}}</h3>
+          <h3><span>Landmark </span>: {{landmark}} </h3>
+          <h3><span>Start Time </span>: {{start_time}} </h3>				
+          <h3 style="padding-bottom: 20px;"><span>End Time </span>: {{end_time}} </h3>
         </div>  
-        {{/res}} -->
+        {{/res}} 
       </div>
-    
-    </div>
-    
 	
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/js/libs/jquery-3.3.1.min.js"></script>

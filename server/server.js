@@ -4,8 +4,8 @@ const express = require('express');
 const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const ejs = require('ejs');
-
+const mustache = require('mustache-express');
+const moment = require('moment');
 
 const publicPath = path.join(__dirname, '../public');
 
@@ -30,14 +30,9 @@ var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
 
-// var {getLocationFromCameraId} = require('./utils');
-
-// app.engine('html', mustache());
-// app.set('view engine', 'html');
-// app.set('views', publicPath);
-// app.use(express.static(publicPath));
-
-
+app.engine('html', mustache());
+app.set('view engine', 'html');
+app.set('views', publicPath);
 
 app.use(express.static(path.join(__dirname, '../static')));
 
@@ -91,17 +86,16 @@ app.post('/api/activity/', (req, res) => {
             console.log(err)
         })
 
-        // get camera details
-        let landmark = ''
-        let latitude = 0.0
-        let longitude = 0.0
-        Camera.findOne({camera_id: camera_id}).then((res) => {
-            landmark = res.landmark
-            latitude = res.latitude
-            longitude = res.longitude
-        })
 
-        req.app.io.emit('newactivity', {
+        // camera details
+        Camera.findOne({camera_id: camera_id})
+        .then((res) => {
+            return {latitude : res.latitude, longitude : res.longitude, landmark : res.landmark }
+        })
+        .then(({latitude, longitude, landmark}) => {
+        
+            // socket emit
+            req.app.io.emit('newactivity', {
                 camera_id,
                 latitude,
                 longitude,
@@ -110,10 +104,11 @@ app.post('/api/activity/', (req, res) => {
                 screenshot_url,
                 start_time,
                 end_time
-        });
+            });            
+        })
+
 
         res.status(200).send(); 
-    
 });
 
 //list all activites 
@@ -161,10 +156,68 @@ app.get('/api/camera/', (req, res) => {
     })
 })
 
+
 //Frontend routes go here
 app.get('/', (req, res) => {
-    res.render('index')
+    result_final = [];
+     Camera.find(req.query).then((result) => {
+        if(result.length === 0){
+           res.render('index', {"message" : 'query does not match any Event'})
+        }
+        else {
+            result.forEach((camera)=>{
+                camera.activities_detected.forEach((activity)=>{
+                        result_final.push({
+                            "camera_id" : camera.camera_id,
+                            "landmark" : camera.landmark,
+                            "latitude" : camera.latitude,
+                            "longitude": camera.longitude,
+                            "activity_name" : activity.activity_name,
+                            "screenshot_url" : activity.screenshot_url,
+                            "start_time": activity.start_time,
+                            "end_time" : activity.end_time
+                        });
+                    });
+                });
+            result_final.forEach((activity) => {
+                activity.start_time = moment(activity.start_time).format('MMMM Do YYYY, h:mm:ss a')
+                activity.end_time = moment(activity.end_time).format('MMMM Do YYYY, h:mm:ss a')
+            })
+            // console.log(result_final)
+            res.render('index', {"res" : result_final})
+        }
+     }).catch((err) => {console.log(err)})
 })
+app.get('/history/', (req, res) => {
+    result_final = [];
+     Camera.find(req.query).then((result) => {
+        if(result.length === 0){
+           res.render('index', {"message" : 'query does not match any Event'})
+        }
+        else {
+            result.forEach((camera)=>{
+                camera.activities_detected.forEach((activity)=>{
+                        result_final.push({
+                            "camera_id" : camera.camera_id,
+                            "landmark" : camera.landmark,
+                            "latitude" : camera.latitude,
+                            "longitude": camera.longitude,
+                            "activity_name" : activity.activity_name,
+                            "screenshot_url" : activity.screenshot_url,
+                            "start_time": activity.start_time,
+                            "end_time" : activity.end_time
+                        });
+                    });
+                });
+            result_final.forEach((activity) => {
+                activity.start_time = moment(activity.start_time).format('MMMM Do YYYY, h:mm:ss a')
+                activity.end_time = moment(activity.end_time).format('MMMM Do YYYY, h:mm:ss a')
+            })
+            // console.log(result_final)
+            res.render('history', {"res" : result_final})
+        }
+     }).catch((err) => {console.log(err)})
+});
 
 server.listen(port, () => {
 	console.log(`Server is up on port ${port}`);
